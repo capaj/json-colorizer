@@ -8,19 +8,21 @@ This package is a simple console syntax highlighter for JSON.
 
 ## Installation
 
-`npm install --save json-colorizer`
+```sh
+npm install --save @pinojs/json-colorizer
+```
 
 ## Usage
 
 ```js
-const colorize = require('json-colorizer')
+const colorize = require('@pinojs/json-colorizer')
 console.log(colorize({ foo: 'bar' }))
 ```
 
 If you pass a string to the colorize function, it will treat it as pre-serialized JSON. This can be used in order to colorize pretty-printed JSON:
 
 ```js
-const colorize = require('json-colorizer')
+const colorize = require('@pinojs/json-colorizer')
 const json = JSON.stringify({ foo: 'bar' }, null, 2)
 console.log(colorize(json))
 ```
@@ -30,7 +32,7 @@ console.log(colorize(json))
 To pretty-print the resulting JSON, pass the `pretty: true` option to the options object:
 
 ```js
-const colorize = require('json-colorizer')
+const colorize = require('@pinojs/json-colorizer')
 const json = '{"foo": "bar"}'
 console.log(colorize(json, { pretty: true }))
 ```
@@ -42,7 +44,7 @@ You can specify a color to use for coloring individual tokens by providing a `co
 A color can also be specified as a hex value starting with the `#` symbol.
 
 ```js
-const colorize = require('json-colorizer')
+const colorize = require('@pinojs/json-colorizer')
 console.log(
   colorize(
     { foo: 'bar' },
