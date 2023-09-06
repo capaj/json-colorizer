@@ -1,126 +1,137 @@
-const { expect } = require('chai');
-const { getTokens } = require('../lib/lexer');
+const { test } = require('tap')
+const { getTokens } = require('../lib/lexer')
 
-describe('Lexer', () => {
-  it('tokenizes a basic JSON object', () => {
-    const result = getTokens({
-      foo: 'bar'
-    });
+test('tokenizes a basic JSON object', (t) => {
+  const result = getTokens({
+    foo: 'bar'
+  })
 
-    expect(result).to.deep.equal([
-      { type: 'BRACE', value: '{' },
-      { type: 'STRING_KEY', value: '"foo"' },
-      { type: 'COLON', value: ':' },
-      { type: 'STRING_LITERAL', value: '"bar"' },
-      { type: 'BRACE', value: '}' }
-    ]);
-  });
+  t.same(result, [
+    { type: 'BRACE', value: '{' },
+    { type: 'STRING_KEY', value: '"foo"' },
+    { type: 'COLON', value: ':' },
+    { type: 'STRING_LITERAL', value: '"bar"' },
+    { type: 'BRACE', value: '}' }
+  ])
+  t.end()
+})
 
-  it('tokenizes a basic JSON string', () => {
-    const result = getTokens('{"foo":"bar"}');
+test('tokenizes a basic JSON string', (t) => {
+  const result = getTokens('{"foo":"bar"}')
 
-    expect(result).to.deep.equal([
-      { type: 'BRACE', value: '{' },
-      { type: 'STRING_KEY', value: '"foo"' },
-      { type: 'COLON', value: ':' },
-      { type: 'STRING_LITERAL', value: '"bar"' },
-      { type: 'BRACE', value: '}' }
-    ]);
-  });
+  t.same(result, [
+    { type: 'BRACE', value: '{' },
+    { type: 'STRING_KEY', value: '"foo"' },
+    { type: 'COLON', value: ':' },
+    { type: 'STRING_LITERAL', value: '"bar"' },
+    { type: 'BRACE', value: '}' }
+  ])
+  t.end()
+})
 
-  it('tokenizes an array', () => {
-    const result = getTokens(['foo', 'bar']);
+test('tokenizes an array', (t) => {
+  const result = getTokens(['foo', 'bar'])
 
-    expect(result).to.deep.equal([
-      { type: 'BRACKET', value: '[' },
-      { type: 'STRING_LITERAL', value: '"foo"' },
-      { type: 'COMMA', value: ',' },
-      { type: 'STRING_LITERAL', value: '"bar"' },
-      { type: 'BRACKET', value: ']' }
-    ]);
-  });
+  t.same(result, [
+    { type: 'BRACKET', value: '[' },
+    { type: 'STRING_LITERAL', value: '"foo"' },
+    { type: 'COMMA', value: ',' },
+    { type: 'STRING_LITERAL', value: '"bar"' },
+    { type: 'BRACKET', value: ']' }
+  ])
+  t.end()
+})
 
-  it('includes whitespace', () => {
-    const result = getTokens('{\n  "foo": "bar"\n}');
+test('includes whitespace', (t) => {
+  const result = getTokens('{\n  "foo": "bar"\n}')
 
-    expect(result).to.deep.equal([
-      { type: 'BRACE', value: '{' },
-      { type: 'WHITESPACE', value: '\n  ' },
-      { type: 'STRING_KEY', value: '"foo"' },
-      { type: 'COLON', value: ':' },
-      { type: 'WHITESPACE', value: ' ' },
-      { type: 'STRING_LITERAL', value: '"bar"' },
-      { type: 'WHITESPACE', value: '\n' },
-      { type: 'BRACE', value: '}' }
-    ]);
-  });
+  t.same(result, [
+    { type: 'BRACE', value: '{' },
+    { type: 'WHITESPACE', value: '\n  ' },
+    { type: 'STRING_KEY', value: '"foo"' },
+    { type: 'COLON', value: ':' },
+    { type: 'WHITESPACE', value: ' ' },
+    { type: 'STRING_LITERAL', value: '"bar"' },
+    { type: 'WHITESPACE', value: '\n' },
+    { type: 'BRACE', value: '}' }
+  ])
+  t.end()
+})
 
-  it('tokenizes boolean values', () => {
-    let result = getTokens('true');
-    expect(result).to.deep.equal([{ type: 'BOOLEAN_LITERAL', value: 'true' }]);
+test('tokenizes boolean values', (t) => {
+  let result = getTokens('true')
+  t.same(result, [{ type: 'BOOLEAN_LITERAL', value: 'true' }])
 
-    result = getTokens('false');
-    expect(result).to.deep.equal([{ type: 'BOOLEAN_LITERAL', value: 'false' }]);
-  });
+  result = getTokens('false')
+  t.same(result, [{ type: 'BOOLEAN_LITERAL', value: 'false' }])
+  t.end()
+})
 
-  it('tokenizes integer values', () => {
-    let result = getTokens('123');
-    expect(result).to.deep.equal([{ type: 'NUMBER_LITERAL', value: '123' }]);
+test('tokenizes integer values', (t) => {
+  let result = getTokens('123')
+  t.same(result, [{ type: 'NUMBER_LITERAL', value: '123' }])
 
-    result = getTokens('-10');
-    expect(result).to.deep.equal([{ type: 'NUMBER_LITERAL', value: '-10' }]);
-  });
+  result = getTokens('-10')
+  t.same(result, [{ type: 'NUMBER_LITERAL', value: '-10' }])
+  t.end()
+})
 
-  it('tokenizes a decimal number', () => {
-    const result = getTokens('1.234');
-    expect(result).to.deep.equal([{ type: 'NUMBER_LITERAL', value: '1.234' }]);
-  });
+test('tokenizes a decimal number', (t) => {
+  const result = getTokens('1.234')
+  t.same(result, [{ type: 'NUMBER_LITERAL', value: '1.234' }])
+  t.end()
+})
 
-  it('tokenizes a scientific notation number', () => {
-    let result = getTokens('12e5');
-    expect(result).to.deep.equal([{ type: 'NUMBER_LITERAL', value: '12e5' }]);
+test('tokenizes a scientific notation number', (t) => {
+  let result = getTokens('12e5')
+  t.same(result, [{ type: 'NUMBER_LITERAL', value: '12e5' }])
 
-    result = getTokens('12e+5');
-    expect(result).to.deep.equal([{ type: 'NUMBER_LITERAL', value: '12e+5' }]);
+  result = getTokens('12e+5')
+  t.same(result, [{ type: 'NUMBER_LITERAL', value: '12e+5' }])
 
-    result = getTokens('12E-5');
-    expect(result).to.deep.equal([{ type: 'NUMBER_LITERAL', value: '12E-5' }]);
-  });
+  result = getTokens('12E-5')
+  t.same(result, [{ type: 'NUMBER_LITERAL', value: '12E-5' }])
+  t.end()
+})
 
-  it('tokenizes null', () => {
-    const result = getTokens('null');
-    expect(result).to.deep.equal([{ type: 'NULL_LITERAL', value: 'null' }]);
-  });
+test('tokenizes null', (t) => {
+  const result = getTokens('null')
+  t.same(result, [{ type: 'NULL_LITERAL', value: 'null' }])
+  t.end()
+})
 
-  it('tokenizes a string literal with brace characters', () => {
-    const result = getTokens('"{hello}"');
-    expect(result).to.deep.equal([{ type: 'STRING_LITERAL', value: '"{hello}"' }]);
-  });
+test('tokenizes a string literal with brace characters', (t) => {
+  const result = getTokens('"{hello}"')
+  t.same(result, [{ type: 'STRING_LITERAL', value: '"{hello}"' }])
+  t.end()
+})
 
-  it('tokenizes a string literal with bracket characters', () => {
-    const result = getTokens('"[hello]"');
-    expect(result).to.deep.equal([{ type: 'STRING_LITERAL', value: '"[hello]"' }]);
-  });
+test('tokenizes a string literal with bracket characters', (t) => {
+  const result = getTokens('"[hello]"')
+  t.same(result, [{ type: 'STRING_LITERAL', value: '"[hello]"' }])
+  t.end()
+})
 
-  it('tokenizes a string literal with an escaped quote', () => {
-    const result = getTokens('"a\\"b"');
-    expect(result).to.deep.equal([{ type: 'STRING_LITERAL', value: '"a\\"b"' }]);
-  });
+test('tokenizes a string literal with an escaped quote', (t) => {
+  const result = getTokens('"a\\"b"')
+  t.same(result, [{ type: 'STRING_LITERAL', value: '"a\\"b"' }])
+  t.end()
+})
 
-  it('tokenizes a key-value pair with whitespace between the :', () => {
-    const result = getTokens('"foo" : "bar"');
-    expect(result).to.deep.equal([
-      { type: 'STRING_KEY', value: '"foo"' },
-      { type: 'WHITESPACE', value: ' ' },
-      { type: 'COLON', value: ':' },
-      { type: 'WHITESPACE', value: ' ' },
-      { type: 'STRING_LITERAL', value: '"bar"' }
-    ]);
-  });
+test('tokenizes a key-value pair with whitespace between the :', (t) => {
+  const result = getTokens('"foo" : "bar"')
+  t.same(result, [
+    { type: 'STRING_KEY', value: '"foo"' },
+    { type: 'WHITESPACE', value: ' ' },
+    { type: 'COLON', value: ':' },
+    { type: 'WHITESPACE', value: ' ' },
+    { type: 'STRING_LITERAL', value: '"bar"' }
+  ])
+  t.end()
+})
 
-  it('given an undefined json when get token should have no results', () => {
-    const result = getTokens(undefined);
-
-    expect(result).to.deep.equal([]);
-  });
-});
+test('given an undefined json when get token should have no results', (t) => {
+  const result = getTokens(undefined)
+  t.same(result, [])
+  t.end()
+})
