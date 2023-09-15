@@ -1,8 +1,5 @@
-const chai = require('chai')
-const { jestSnapshotPlugin } = require('mocha-chai-jest-snapshot')
+const { test } = require('tap')
 
-chai.use(jestSnapshotPlugin())
-const { expect } = chai
 const { getTokens } = require('../lib/lexer')
 const { colorize } = require('../lib/colorizer')
 const customColors = {
@@ -24,29 +21,31 @@ const fixture = {
   array: ['values']
 }
 
-describe('Colorizer', function () {
-  it('does not throw an error when there is whitespace', function () {
-    expect(() => colorize(getTokens(JSON.stringify(fixture, null, 2)))).to.not.throw()
-  })
+test('does not throw an error when there is whitespace', (t) => {
+  t.doesNotThrow(() => colorize(getTokens(JSON.stringify(fixture, null, 2))))
+  t.end()
+})
 
-  it('colorizes with default options', function () {
-    const tokens = getTokens(fixture)
-    const result = colorize(tokens)
+test('colorizes with default options', (t) => {
+  const tokens = getTokens(fixture)
+  const result = colorize(tokens)
 
-    expect(result).toMatchSnapshot()
-  })
+  t.matchSnapshot(result)
+  t.end()
+})
 
-  it('colorizes with custom colors', function () {
-    const tokens = getTokens(fixture)
-    const result = colorize(tokens, { colors: customColors })
+test('colorizes with custom colors', (t) => {
+  const tokens = getTokens(fixture)
+  const result = colorize(tokens, { colors: customColors })
 
-    expect(result).toMatchSnapshot()
-  })
+  t.matchSnapshot(result)
+  t.end()
+})
 
-  it('colorizes with only specific overrides for colors', function () {
-    const tokens = getTokens(fixture)
-    const result = colorize(tokens, { colors: { NUMBER_LITERAL: 'red' } })
+test('colorizes with only specific overrides for colors', (t) => {
+  const tokens = getTokens(fixture)
+  const result = colorize(tokens, { colors: { NUMBER_LITERAL: 'red' } })
 
-    expect(result).toMatchSnapshot()
-  })
+  t.matchSnapshot(result)
+  t.end()
 })
