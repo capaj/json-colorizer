@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:pinojss/json-colorizer.git"
+    "url": "git+ssh://git@github.com:pinojs/json-colorizer.git"
   },
   "keywords": [
     "json",
